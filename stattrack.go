@@ -3,7 +3,6 @@ package stattrack
 import (
 	"strconv"
 	"github.com/dankozitza/seestack"
-	"github.com/dankozitza/sconf"
 	"github.com/dankozitza/logshare"
 	"github.com/dankozitza/statdist"
 )
@@ -26,7 +25,6 @@ type StatTrack statdist.Stat
 
 var pkgstat StatTrack
 var id_cnt int = 0
-var conf sconf.Sconf = sconf.Inst()
 var log logshare.Logshare
 
 func init() {
@@ -70,8 +68,8 @@ func (s StatTrack) Warn(m string) StatTrack {
 
 // ErrStatTrack
 //
-// This error object does not mention statshare. It automatically sets the
-// error string to display the attributes of the statshare object. this
+// This error object does not mention stattrack. It automatically sets the
+// error string to display the attributes of the stattrack object. this
 // way when s.Err("msg") is called the message does not need to mention
 // it's package name.
 //
@@ -114,7 +112,7 @@ func (s StatTrack) PanicErr(m string, e error) {
 	panic(ErrStatTrack(s))
 }
 
-// used to get statdist version of StatTrack
+// converts StatTrack back to statdist.Stat
 func (s StatTrack) todist() statdist.Stat {
 	return statdist.Stat(s)
 }
