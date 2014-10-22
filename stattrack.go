@@ -1,13 +1,14 @@
 package stattrack
 
 import (
-	"strconv"
-	"github.com/dankozitza/seestack"
 	"github.com/dankozitza/logshare"
+	"github.com/dankozitza/seestack"
 	"github.com/dankozitza/statdist"
+	"strconv"
 )
 
 type ErrStatTrackGeneric string
+
 func (e ErrStatTrackGeneric) Error() string {
 	return "stattrack error: " + string(e)
 }
@@ -74,6 +75,7 @@ func (s StatTrack) Warn(m string) StatTrack {
 // it's package name.
 //
 type ErrStatTrack StatTrack
+
 func (s ErrStatTrack) Error() string {
 	return "\n[" + strconv.Itoa(s.Id) + "][" + s.Status + "][" + s.ShortStack +
 		"]: " + s.Message
