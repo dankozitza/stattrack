@@ -1,7 +1,7 @@
 package stattrack
 
 import (
-	"github.com/dankozitza/logshare"
+	//"github.com/dankozitza/logshare"
 	"github.com/dankozitza/seestack"
 	"github.com/dankozitza/statdist"
 	"strconv"
@@ -25,12 +25,11 @@ func (e ErrStatTrackGeneric) Error() string {
 type StatTrack statdist.Stat
 
 var pkgstat StatTrack
-var id_cnt int = 0
-var log logshare.Logshare
+//var log logshare.Logshare
 
 func init() {
 	pkgstat = New("package initialized")
-	log = logshare.New()
+	//log = logshare.New()
 	statdist.Handle(statdist.Stat(pkgstat))
 
 	return
@@ -38,8 +37,12 @@ func init() {
 
 func New(msg string) StatTrack {
 
-	myst := StatTrack{id_cnt, "PASS", seestack.ShortExclude(1), msg, ""}
-	id_cnt += 1
+	myst := StatTrack{
+		statdist.GetId(),
+		"PASS",
+		seestack.ShortExclude(1),
+		msg,
+		""}
 
 	statdist.Handle(myst.todist())
 
@@ -52,7 +55,7 @@ func (s StatTrack) Pass(m string) StatTrack {
 	s.Status = "PASS"
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
-	log.P("[" + s.Status + "] " + s.Message)
+	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return s
 }
@@ -62,7 +65,7 @@ func (s StatTrack) Warn(m string) StatTrack {
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
 
-	log.P("[" + s.Status + "] " + s.Message)
+	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return s
 }
@@ -87,7 +90,7 @@ func (s StatTrack) Err(m string) ErrStatTrack {
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
 
-	log.P("[" + s.Status + "] " + s.Message)
+	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return ErrStatTrack(s)
 }
@@ -98,7 +101,7 @@ func (s StatTrack) Panic(m string) {
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
 
-	log.P("[" + s.Status + "] " + s.Message)
+	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	panic(ErrStatTrack(s))
 }
@@ -109,7 +112,7 @@ func (s StatTrack) PanicErr(m string, e error) {
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
 
-	log.P("[" + s.Status + "] " + s.Message)
+	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	panic(ErrStatTrack(s))
 }
