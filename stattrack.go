@@ -1,7 +1,7 @@
 package stattrack
 
 import (
-	//"github.com/dankozitza/logshare"
+	//"github.com/dankozitza/log"
 	"github.com/dankozitza/seestack"
 	"github.com/dankozitza/statdist"
 	"strconv"
@@ -24,14 +24,17 @@ func (e ErrStatTrackGeneric) Error() string {
 
 type StatTrack statdist.Stat
 
-var pkgstat StatTrack
+var pkgstat StatTrack = StatTrack{
+	statdist.GetId(),
+	"INIT",
+	seestack.Short(),
+	"package initialized",
+	""}
+
 //var log logshare.Logshare
 
 func init() {
-	pkgstat = New("package initialized")
-	//log = logshare.New()
 	statdist.Handle(statdist.Stat(pkgstat))
-
 	return
 }
 
@@ -39,14 +42,14 @@ func New(msg string) StatTrack {
 
 	myst := StatTrack{
 		statdist.GetId(),
-		"PASS",
+		"INIT",
 		seestack.ShortExclude(1),
 		msg,
 		""}
 
 	statdist.Handle(myst.todist())
 
-	pkgstat.Pass("created new Stat object with id: " + strconv.Itoa(myst.Id))
+	//pkgstat.Pass("created new Stat object with id: " + strconv.Itoa(myst.Id))
 
 	return myst
 }
