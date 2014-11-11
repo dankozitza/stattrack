@@ -83,8 +83,9 @@ func (s StatTrack) Warn(m string) StatTrack {
 type ErrStatTrack StatTrack
 
 func (s ErrStatTrack) Error() string {
-	return "\n[" + strconv.Itoa(s.Id) + "][" + s.Status + "][" + s.ShortStack +
-		"]: " + s.Message
+
+	return "\n[" + s.ShortStack + "][" + s.Status + "][" +
+		strconv.Itoa(s.Id) + "] " + s.Message
 }
 
 func (s StatTrack) Err(m string) ErrStatTrack {
