@@ -1,7 +1,6 @@
 package stattrack
 
 import (
-	//"github.com/dankozitza/log"
 	"github.com/dankozitza/seestack"
 	"github.com/dankozitza/statdist"
 	"strconv"
@@ -31,8 +30,6 @@ var pkgstat StatTrack = StatTrack{
 	"package initialized",
 	""}
 
-//var log logshare.Logshare
-
 func init() {
 	statdist.Handle(statdist.Stat(pkgstat))
 	return
@@ -49,8 +46,6 @@ func New(msg string) StatTrack {
 
 	statdist.Handle(myst.todist())
 
-	//pkgstat.Pass("created new Stat object with id: " + strconv.Itoa(myst.Id))
-
 	return myst
 }
 
@@ -58,7 +53,6 @@ func (s StatTrack) Pass(m string) StatTrack {
 	s.Status = "PASS"
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
-	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return s
 }
@@ -67,8 +61,6 @@ func (s StatTrack) Warn(m string) StatTrack {
 	s.Status = "WARN"
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
-
-	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return s
 }
@@ -93,8 +85,6 @@ func (s StatTrack) Err(m string) ErrStatTrack {
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-
-	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	return ErrStatTrack(s)
 }
@@ -104,8 +94,6 @@ func (s StatTrack) Panic(m string) {
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-
-	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	panic(ErrStatTrack(s))
 }
@@ -115,8 +103,6 @@ func (s StatTrack) PanicErr(m string, e error) {
 	s.Message = m + ": " + e.Error()
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-
-	//log.P("[" + s.Status + "] " + s.Message)
 	statdist.Handle(s.todist())
 	panic(ErrStatTrack(s))
 }
