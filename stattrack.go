@@ -6,12 +6,6 @@ import (
 	"strconv"
 )
 
-type ErrStatTrackGeneric string
-
-func (e ErrStatTrackGeneric) Error() string {
-	return "stattrack error: " + string(e)
-}
-
 // this is the Stat struct from statdist
 //type Stat struct {
 //	Id int
@@ -31,7 +25,7 @@ var pkgstat StatTrack = StatTrack{
 	""}
 
 func init() {
-	statdist.Handle(statdist.Stat(pkgstat))
+	statdist.Handle(statdist.Stat(pkgstat), true)
 	return
 }
 
@@ -44,16 +38,23 @@ func New(msg string) StatTrack {
 		msg,
 		""}
 
-	statdist.Handle(myst.todist())
+	statdist.Handle(myst.todist(), true)
 
 	return myst
 }
 
 func (s StatTrack) Pass(m string) StatTrack {
+
+	quiet := false
+	if m == "" {
+		m = "generic pass message"
+		quiet = true
+	}
+
 	s.Status = "PASS"
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
-	statdist.Handle(s.todist())
+	statdist.Handle(s.todist(), quiet)
 	return s
 }
 
@@ -61,7 +62,7 @@ func (s StatTrack) Warn(m string) StatTrack {
 	s.Status = "WARN"
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
-	statdist.Handle(s.todist())
+	statdist.Handle(s.todist(), false)
 	return s
 }
 
@@ -85,7 +86,7 @@ func (s StatTrack) Err(m string) ErrStatTrack {
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-	statdist.Handle(s.todist())
+	statdist.Handle(s.todist(), false)
 	return ErrStatTrack(s)
 }
 
@@ -94,7 +95,7 @@ func (s StatTrack) Panic(m string) {
 	s.Message = m
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-	statdist.Handle(s.todist())
+	statdist.Handle(s.todist(), false)
 	panic(ErrStatTrack(s))
 }
 
@@ -103,7 +104,7 @@ func (s StatTrack) PanicErr(m string, e error) {
 	s.Message = m + ": " + e.Error()
 	s.ShortStack = seestack.ShortExclude(1)
 	s.Stack = seestack.Full()
-	statdist.Handle(s.todist())
+	statdist.Handle(s.todist(), false)
 	panic(ErrStatTrack(s))
 }
 

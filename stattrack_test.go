@@ -8,7 +8,7 @@ import (
 func TestNew(t *testing.T) {
 	s := New("first use of New() in TestNew")
 
-	if (s != StatTrack{1, "INIT", "testing.go:422::stattrack_test.go:9",
+	if (s != StatTrack{1, "INIT", "testing:422::stattrack_test:9",
 		"first use of New() in TestNew", ""}) {
 
 		fmt.Println("TestNew: object template did not match StatTrack object:", s)
